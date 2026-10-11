@@ -27,6 +27,9 @@ flowchart LR
 
 ## Data model
 
+One PostgreSQL instance hosts three databases. Each is owned by a dedicated user
+(`auth_user`, `case_user`, `activity_user`), and no service can connect to another service's database.
+
 - `authdb.users(id, username, password_hash, role, enabled, created_at)`
 - `casedb.cases(id, case_number, customer_name, title, description, status, priority, created_by, created_at, updated_at, version)` plus the sequence `case_number_seq`
 - `activitydb.activities(id, case_id, type, content, created_by, created_at)`, append-only. `case_id` is a reference by value, with no foreign key across databases.
