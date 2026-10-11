@@ -23,5 +23,8 @@
 - Token in `sessionStorage`. Fix: HttpOnly cookie plus refresh-token rotation.
 - No rate limiting or lockout on login.
 - No TLS in the demo setup; production would terminate HTTPS at the proxy.
-- Default database credentials are for local use only.
+- The superuser password in .env must be changed for any real deployment.
 - No dependency vulnerability scanning yet (add it to CI).
+
+| Database least privilege | One database user per service (`auth_user`, `case_user`, `activity_user`), each owning only its own database, with CONNECT revoked from PUBLIC. No service uses the superuser. |
+| Secret leakage | gitleaks pre-commit hook; `.env` is git-ignored; `.env.example` has placeholders only |

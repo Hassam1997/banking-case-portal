@@ -49,27 +49,25 @@ See `docs/architecture.md` and `docs/adr/` for the reasoning behind these choice
 
 ## Running the project
 
-Prerequisites: Docker Desktop.
+Prerequisites: Docker Desktop (running).
 
 ```bash
-cp .env.example .env        # then set JWT_SECRET (e.g. openssl rand -base64 48)
+git clone https://github.com/Hassam1997/banking-case-portal.git
+cd banking-case-portal
+cp .env.example .env     # then replace every change-me value
 docker compose up --build -d
 ```
 
-Open http://localhost:8080 (the first start takes a few minutes).
+Generate values with `openssl rand -base64 48` (for `JWT_SECRET`) and
+`openssl rand -hex 16` (for each password). Open http://localhost:8080 once all containers are up.
 
 | User | Password | Role |
 |---|---|---|
 | agent1 | Passw0rd! | AGENT |
 | manager1 | Passw0rd! | MANAGER |
 
-Stop: `docker compose down` (add `-v` to delete data).
-
-### Running without Docker (development)
-
-1. `docker compose up -d postgres`
-2. In each of `services/auth-service`, `case-service`, `activity-service`: `./mvnw spring-boot:run`
-3. In `frontend`: `npm install && npm run dev`, then open http://localhost:5173
+Stop: `docker compose down`. Add `-v` to delete all data; this is also required for the
+database init script to run again.
 
 ### Tests
 
