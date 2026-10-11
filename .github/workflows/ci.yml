@@ -57,6 +57,9 @@ jobs:
     needs: [backend, frontend]
     env:
       JWT_SECRET: ci-only-secret-ci-only-secret-ci-only-secret
+      AUTH_DB_PASSWORD: ci-auth-pw
+      CASE_DB_PASSWORD: ci-case-pw
+      ACTIVITY_DB_PASSWORD: ci-activity-pw
     steps:
       - uses: actions/checkout@v4
       - run: docker compose build

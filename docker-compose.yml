@@ -5,8 +5,11 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD:?Set AUTH_DB_PASSWORD in .env}
+      CASE_DB_PASSWORD: ${CASE_DB_PASSWORD:?Set CASE_DB_PASSWORD in .env}
+      ACTIVITY_DB_PASSWORD: ${ACTIVITY_DB_PASSWORD:?Set ACTIVITY_DB_PASSWORD in .env}
     volumes:
-      - ./infra/docker/postgres/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./infra/docker/postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
@@ -19,8 +22,8 @@ services:
     build: ./services/auth-service
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/authdb
-      DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_USER: auth_user
+      DB_PASSWORD: ${AUTH_DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       SEED_PASSWORD: ${SEED_PASSWORD:-Passw0rd!}
     depends_on:
@@ -31,8 +34,8 @@ services:
     build: ./services/case-service
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/casedb
-      DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_USER: case_user
+      DB_PASSWORD: ${CASE_DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       ACTIVITY_SERVICE_URL: http://activity-service:8083
       CORS_ORIGINS: http://localhost:8080,http://localhost:5173
@@ -44,8 +47,8 @@ services:
     build: ./services/activity-service
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/activitydb
-      DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_USER: activity_user
+      DB_PASSWORD: ${ACTIVITY_DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       CORS_ORIGINS: http://localhost:8080,http://localhost:5173
     depends_on:
