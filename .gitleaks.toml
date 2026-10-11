@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Demo and CI placeholder values"
+paths = [
+  '''\.env\.example$''',
+  '''docs/api\.md$''',
+]
